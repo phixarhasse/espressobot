@@ -1,11 +1,13 @@
-# Welcome to Coffeebot
-Responsible for watching the office's coffee maker and sending notifications to a Slack channel.
+# Welcome to Espressobot
+This is a copy of [coffeebot](https://github.com/phixarhasse/coffeebot), fitted to run on a [Raspberry Pi Pico microcontroller](https://www.raspberrypi.com/products/raspberry-pi-pico/).
+
+Responsible for watching the office's coffee maker and sending notifications to a Slack channel and, optionally, lighting Philips Hue lights.
 
 ## Hardware Requirements
 [Shelly Plug or Plug S](https://www.shelly.cloud/products/shelly-plug-smart-home-automation-device/) for measuring coffeemaker power
 and providing access to measurements through its embedded web server.
 
-I recommend the Plug (without the 'S') as it's allows more current through it.
+I recommend the Plug (without the 'S') as it allows for more current through it.
 
 Optional: [Philips Hue Bridge](https://www.philips-hue.com/en-gb/p/hue-bridge/8719514342583) and [Hue Colored Lights](https://www.philips-hue.com/en-gb/products/smart-light-bulbs)
 
@@ -16,8 +18,7 @@ The Hue Bridge has an API through which coffeebot sets the color of all connecte
 
 ## How to Install the Bot
 
-The instructions assumes a working Python 3 enviroment. On `apt`-based operating systems try something like
-`sudo apt install python3-pip python3-venv`.
+### _Note: This is a WIP and the Espressobot instructions are still TBD. The below instructions are for [coffeebot](https://github.com/phixarhasse/coffeebot). The environmental variables are likely the same, however._
 
 ### _Note: The bot is currently calibrated for a Moccamaster KBG744 AO-B (double brewer)._
 
@@ -42,10 +43,7 @@ SENSOR_URL=     # The complete URL to the Shelly Plug, e.g. "http://192.168.0.10
 
 ## How to Run the Bot
 
-1. `source env/bin/activate` activates the python enviroment
-2. `python coffee-bot.py` run Coffeebot
-3. `deactivate` deactivates the enviroment
-4. Now the bot should be running, time to make some coffee!
+TBD
 
 ## Development
 
