@@ -1,16 +1,14 @@
-import os
-import requests
+import urequests
 import time
-from dotenv import load_dotenv
+import config
 
 class Slack:
     def __init__(self):
-        load_dotenv('.env')
         try:
-            self.useSlack = os.environ['USE_SLACK']
+            self.useSlack = config.USE_SLACK
             self.baseUrl = "https://slack.com/api/"
-            self.authToken = os.environ['SLACK_TOKEN']
-            self.channelId = os.environ['CHANNEL_ID']
+            self.authToken = config.SLACK_TOKEN
+            self.channelId = config.CHANNEL_ID
         except KeyError:
             print("Could not parse one or several of USE_SLACK; SLACK_TOKEN; CHANNEL_ID in the file .env")
             quit()
@@ -33,7 +31,7 @@ class Slack:
         params = {"channel": f"{self.channelId}"}
         messages = []
         try:
-            response = requests.get(url, params=params, headers=headers)
+            response = urequests.get(url, params=params, headers=headers)
             if(not response.ok):
                 print(f"Unable to get all Slack messages: {response.status_code}")
                 return []
@@ -64,7 +62,7 @@ class Slack:
             print(f"Deleting message {counter} out of {len(messages)}")
             params = {"channel": f"{self.channelId}", "ts": f"{message['ts']}"}
             try:
-                response = requests.post(url=url, headers=headers, params=params)
+                response = urequests.post(url=url, headers=headers, params=params)
                 if(not response.ok):
                     print(f"Unable to delete message: {response.status_code} {response.json()['error']}")
                     return
@@ -84,7 +82,7 @@ class Slack:
         params = {"channel": f"{self.channelId}", "ts": f"{self.lastMessageTimestamp}"}
         deletedTimestamp = self.lastMessageTimestamp
         try:
-            response = requests.post(url=url, headers=headers, params=params)
+            response = urequests.post(url=url, headers=headers, params=params)
             if(not response.ok):
                 print(f"Unable to delete message: {response.status_code} {response.json()['error']}")
                 return
@@ -101,7 +99,7 @@ class Slack:
         headers = {"Authorization": f"Bearer {self.authToken}"}
         params = {"channel": f"{self.channelId}", "as_user":"true", "text": f"{messageText}"}
         try:
-            response = requests.post(url=url, headers=headers, params=params)
+            response = urequests.post(url=url, headers=headers, params=params)
             if(not response.ok):
                 print(f"Unable to post message: {response.status_code} {response.json()['error']}")
                 self.getLastMessageTimestamp()
