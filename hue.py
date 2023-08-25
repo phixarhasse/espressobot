@@ -1,13 +1,13 @@
 import os
-import requests
-from dotenv import load_dotenv
+import urequests
+import config
+from time import sleep
 
 class Hue:
     def __init__(self):
-        load_dotenv('.env')
         try:
-            self.useHue = os.environ['USE_HUE']
-            self.bridgeIp = os.environ['HUE_IP']
+            self.useHue = config.USE_HUE
+            self.bridgeIp = config.HUE_IP
             self.url = f"http://{self.bridgeIp}/api"
         except KeyError:
             print("Could not parse USE_HUE or HUE_IP in the file .env")
@@ -42,7 +42,7 @@ class Hue:
     def authorize(self):
         self.username = ""
         try:
-            hueResponse = requests.post(self.url, json={"devicetype": "coffeebot"})
+            hueResponse = urequests.post(self.url, json={"devicetype": "espressobot"})
             if(hueResponse.json()[0]["error"]["type"] == 101): # Need to generate username
                 print("Please press the link button on the HUE Bridge.")
                 user_input = input("Have you pressed it? [y/n] ")
@@ -50,11 +50,11 @@ class Hue:
                     print("Error during Hue authentication. Exiting.")
                     exit(1)
                 else:
-                    hueResponse = requests.post(self.url, json={"devicetype": "coffeebot"})
+                    hueResponse = urequests.post(self.url, json={"devicetype": "espressobot"})
                     username = hueResponse.json()[0]["success"]["username"]
                     self.username = username
                     self.saveUsername(username)
-            elif(hueResponse.ok):
+            elif(hueResponse.status_code == 200):
                 username = hueResponse.json()[0]["success"]["username"]
                 self.username = username
                 self.saveUsername(username)
@@ -68,8 +68,8 @@ class Hue:
         if(self.username == ""):
             return
         try:
-            hueResponse = requests.get(f"{self.url}/{self.username}/lights/")
-            if(not hueResponse.ok):
+            hueResponse = urequests.get(f"{self.url}/{self.username}/lights/")
+            if(not hueResponse.status_code == 200):
                 print("Unable to get Hue lights.")
                 return
         except Exception as e:
@@ -82,10 +82,11 @@ class Hue:
     def setAllLights(self, color):
         try:
             for light in self.lights:
-                hueResponse = requests.put(
+                hueResponse = urequests.put(
                     f"{self.url}/{self.username}/lights/{light}/state",
                     json={"on":True, "sat": 254, "bri":200, "hue": color})
-                print(f"Hue light {light}: {hueResponse.status_code}")
+                #print(f"Hue light {light}: {hueResponse.status_code}")
+                sleep(0.5)
         except Exception as e:
             print(e)
             return
@@ -93,10 +94,12 @@ class Hue:
     def turnOffAllLights(self):
         try:
             for light in self.lights:
-                hueResponse = requests.put(
+                hueResponse = urequests.put(
                     f"{self.url}/{self.username}/lights/{light}/state",
                     json={"on":False})
-                print(f"Hue light {light}: {hueResponse.status_code}")
+                #print(f"Hue light {light}: {hueResponse.status_code}")
+                sleep(0.5)
         except Exception as e:
             print(e)
             return
+

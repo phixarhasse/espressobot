@@ -1,0 +1,9 @@
+WIFI_SSID = ""
+WIFI_PASSWORD = ""
+
+USE_SLACK = False
+SLACK_TOKEN = ""
+CHANNEL_ID = ""
+USE_HUE = False
+HUE_IP = ""
+SENSOR_URL = ""
